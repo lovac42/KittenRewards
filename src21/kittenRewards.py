@@ -2,20 +2,22 @@
 # Copyright: (C) 2018 Lovac42
 # Support: https://github.com/lovac42/KittenRewards
 # License: GNU GPL, version 3 or later; http://www.gnu.org/copyleft/gpl.html
-# Version: 0.0.1
+# Version: 0.0.2
 
 from aqt import mw
 from anki.hooks import wrap
 from aqt.mediasrv import RequestHandler
 import anki.sched, anki.schedv2
 from anki.utils import isMac, isLin
-import random, os
+import random, os, re
 # from aqt.utils import showWarning, showText
 
 
+IMG_EXT = re.compile(r'\.(?:jpe?g|gif|png|tiff|bmp)$', re.I) #Perl FTW! <3
+
 RES_DIR = 'kitten_rewards'
 CATS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), RES_DIR))
-CATS_IMGS = [i for i in os.listdir(CATS_DIR) if i.endswith(".jpg")]
+CATS_IMGS = [i for i in os.listdir(CATS_DIR) if IMG_EXT.search(i)]
 
 
 def finishedMsg(self, _old):
