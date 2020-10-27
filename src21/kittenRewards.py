@@ -6,7 +6,7 @@
 
 from aqt import mw
 from anki.hooks import wrap
-from aqt.mediasrv import RequestHandler
+import aqt.mediasrv
 import anki.sched, anki.schedv2
 from anki.utils import isMac, isLin
 import random, os, re
@@ -34,10 +34,9 @@ anki.schedv2.Scheduler.finishedMsg = wrap(anki.schedv2.Scheduler.finishedMsg, fi
 
 
 # Replace /user/collection.media folder with actual addon path
-def _redirectWebExports(self, path, _old):
-    targetPath = os.path.join(os.getcwd(), RES_DIR, '')
-    if path.startswith(targetPath):
-        return os.path.join(CATS_DIR, path[len(targetPath):])
-    return _old(self,path)
+def _redirectWebExports(path, _old):
+    if path.startswith(RES_DIR):
+        return  CATS_DIR, path[len(RES_DIR) + 1:]
+    return _old(path)
 
-RequestHandler._redirectWebExports = wrap(RequestHandler._redirectWebExports, _redirectWebExports, 'around')
+aqt.mediasrv._redirectWebExports = wrap(aqt.mediasrv._redirectWebExports, _redirectWebExports, 'around')
